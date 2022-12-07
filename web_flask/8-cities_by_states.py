@@ -1,32 +1,26 @@
 #!/usr/bin/python3
-"""starts a Flask web application"""
-
+"""Module: Starts a Flask web app and fetches data from storage engine"""
 from flask import Flask, render_template
-import models
+from models import storage
+from models.state import State
 
-app = Flask("__name__")
+
+app = Flask(__name__)
 
 
 @app.teardown_appcontext
-def refresh(exception):
-        models.storage.close()
+def close_session(cls):
+    """Closes session"""
+    storage.close()
 
 
-@app.route("/states_list", strict_slashes=False)
-def route_states():
-        pep_fix = models.dummy_classes["State"]
-        data = models.storage.all(cls=pep_fix)
-        states = data.values()
-        return render_template('7-states_list.html', states_list=states)
+@app.route('/cities_by_states', strict_slashes=False)
+def states_list():
+    """lists states from storage engine"""
+    states = list(storage.all(State).values())
+    return render_template('8-cities_by_states.html', states=states)
 
 
-@app.route("/cities_by_states", strict_slashes=False)
-def route_city():
-        pep_fix = models.dummy_classes["State"]
-        data = models.storage.all(cls=pep_fix)
-        states = data.values()
-        return render_template('8-cities_by_states.html', states_list=states)
-
-
-if __name__ == "__main__":
-        app.run()
+if __name__ == '__main__':
+    storage.reload()
+    app.run("0.0.0.0", 5000)

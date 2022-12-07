@@ -1,48 +1,45 @@
 #!/usr/bin/python3
-"""Flask framework
-"""
-from flask import Flask, url_for, render_template
-
+"""Module - script that starts a Flask web application"""
+from flask import Flask, render_template
 app = Flask(__name__)
 
 
-@app.route("/", strict_slashes=False)
-def hello_world():
-    """return hello hbhb
-    """
-    return "Hello HBNB!"
+@app.route('/', strict_slashes=False)
+def hello_hbnb():
+    """Handles the root url"""
+    return 'Hello HBNB!'
 
 
-@app.route("/hbnb", strict_slashes=False)
-def HBNB():
-    """return HBNB"""
-    return "HBNB"
+@app.route('/hbnb', strict_slashes=False)
+def hbnb():
+    """Handles hbnb route"""
+    return 'HBNB'
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def text(text):
-    """return text given"""
-    return "C {}".format(text.replace("_", " "))
+def c_text(text):
+    """Handles /c/<text> route"""
+    return 'C {}'.format(text.replace('_', ' '))
 
 
-@app.route('/python/', defaults={'text': 'is_cool'})
+@app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def display(text):
-    """display “Python ”, followed by the value of the text"""
-    return "Python {}".format(text.replace("_", " "))
+def python_text(text='is cool'):
+    """Handles /python/<text> route"""
+    return 'Python {}'.format(text.replace('_', ' '))
 
 
 @app.route('/number/<int:n>', strict_slashes=False)
-def num_display(n):
-    """display “n is a number” only"""
-    return "{} is a number".format(n)
+def number(n):
+    """Handles /number/<n> route"""
+    return '{} is a number'.format(n)
 
 
 @app.route('/number_template/<int:n>', strict_slashes=False)
-def num_html(n):
-    """display HTML is "n" is a number only"""
-    return render_template('5-number.html', name=n)
+def number_template(n):
+    """Handles /number_template/<int:n> route"""
+    return render_template('5-number.html', n=n)
 
 
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    app.run("0.0.0.0", 5000)
